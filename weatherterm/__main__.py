@@ -50,7 +50,7 @@ argparser.add_argument("-v", "--version",
 argparser.add_argument("-td", "--today",
                        dest="forecast_option",
                        action="store_const",
-                       const="ForecastType.TODAY",
+                       const=ForecastType.TODAY,
                        help="Show the weather forecast for the current day")
 
 args = argparser.parse_args()
