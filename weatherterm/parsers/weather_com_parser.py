@@ -1,6 +1,6 @@
 from weatherterm.core import ForecastType
 
-def WeatherComParser:
+def WeatherComParser():
 
     def __init__(self):
         self._forecast = {
@@ -9,7 +9,6 @@ def WeatherComParser:
             ForecastType.TENDAYS: self.five_and_ten_days_forecast,
             ForecastType.WEEKEND:self._weekend_forecast,
         }
-
 
     def _today_forecast(self, args):
         raise NotImplementedError()
