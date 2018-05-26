@@ -7,7 +7,7 @@ class UnitConverter:
         self.dest_unit = dest_unit
 
         self._convert_functions = {
-            Unit.CELSUIUS: self._to_celsius,
+            Unit.CELSIUS: self._to_celsius,
             Unit.FAHRENHEIT: self._to_fahrenheit
         }
 
