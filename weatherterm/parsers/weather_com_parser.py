@@ -6,6 +6,7 @@ from weatherterm.core import Forecast
 from weatherterm.core import Request
 from weatherterm.core import Unit
 from weatherterm.core import UnitConverter
+from weatherterm.core import Mapper
 
 
 class WeatherComParser():
@@ -17,7 +18,7 @@ class WeatherComParser():
             ForecastType.TENDAYS: self._five_and_ten_days_forecast,
             ForecastType.WEEKEND:self._weekend_forecast,
         }
-        self._base_url = 'https://weather.come.weather/{forecast}/l/{area}'
+        self._base_url = 'https://weather.com/weather/{forecast}/l/{area}'
         self._request = Request(self._base_url)
 
         self._temp_regex = re.compile('([0-9]+)\D{,2}([0-9]+)')
@@ -64,7 +65,6 @@ class WeatherComParser():
         soup = BeautifulSoup(content, 'html.parser')
         container = soup.find('section', class_='today_nowcard-container')
         weather_conditions = self._parse(container, criteria)
-        print("testing", weather_conditions)
         if len(weather_conditions) < 1:
             raise Exception("Could not parse weather Forecast for today")
 
@@ -76,7 +76,7 @@ class WeatherComParser():
         high_temp, low_temp = temp_info.groups()
 
         side = container.find('div', class_='today_nowcard-sidecar')
-        humidity, wind = self.get_additiona_info(side)
+        humidity, wind = self._get_additional_info(side)
 
         curr_temp = self._clear_str_number(weatherinfo['today_nowcard-temp'])
 
@@ -94,7 +94,7 @@ class WeatherComParser():
     def _parse_list_forecast(self, content, args):
         criteria = {
             'date-time': 'span',
-            'day_detail': 'span',
+            'day-detail': 'span',
             'description': 'td',
             'temp': 'td',
             'wind': 'td',
@@ -143,10 +143,12 @@ class WeatherComParser():
     def _five_and_ten_days_forecast(self, args):
         content = self._request.fetch_data(args.forecast_option.value, args.area_code)
         results = self._parse_list_forecast(content, args)
-        return self._prepare_data(results)
+        return self._prepare_data(results, args)
 
     def _weekend_forecast(self, args):
-        raise NotImplementedError()
+        criteria= {
+            
+        }
 
     def run(self, args):
         self._forecast_type = args.forecast_option
