@@ -119,7 +119,7 @@ class WeatherComParser():
                 high_temp, low_temp = match.groups()
 
             try:
-                dateinfo = item['weather_cell']
+                dateinfo = item['weather-cell']
                 date_time, day_detail = dateinfo[:3], dateinfo[3:]
                 item['date-time'] = date_time
                 item['day-detail'] = day_detail
