@@ -146,9 +146,32 @@ class WeatherComParser():
         return self._prepare_data(results, args)
 
     def _weekend_forecast(self, args):
-        criteria= {
-            
+        criteria = {
+            'weather-cell': 'header',
+            'temp': 'p',
+            'weather-phrase': 'h3',
+            'wind-conditions': 'p',
+            'humidity': 'p',
         }
+
+        mapper = Mapper()
+        mapper.remap_key('wind-conditions', 'wind')
+        mapper.remap_key('weather-phrase', 'description')
+
+        content = self._request.fetch_data(args.forecast_option.value,
+                                           args.area_code)
+
+        soup = BeautifulSoup(content, 'html.parser')
+
+        forecast_data = soup.find('article', class_='ls-mod')
+        container = forecast_data.div.div
+
+        partial_results = self._parse(container, criteria)
+        results = mapper.remap(partial_results)
+
+        return self._prepare_data(results, args)
+
+
 
     def run(self, args):
         self._forecast_type = args.forecast_option
